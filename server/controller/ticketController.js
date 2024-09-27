@@ -4,19 +4,15 @@ const User = require('../model/user');
 // Create a new ticket (Customer only)
 exports.createTicket = async (req, res) => {
   try {
-    const { title, customerID } = req.body;
+    const { title } = req.body;
 
-    // Find customer by ID
-    const customer = await User.findById(customerID);
-    if (!customer || customer.role !== 'Customer') {
-      return res.status(400).json({ message: 'Invalid customer' });
-    }
+    const customerID = req.user._id; // Use the logged-in user's ID
 
     // Create new ticket
     const newTicket = new Ticket({
       title,
-      customerName: customer.username,
-      customerID: customer._id
+      customerID,
+      customerName: req.user.username
     });
 
     await newTicket.save();
@@ -37,9 +33,9 @@ exports.getAllTickets = async (req, res) => {
 };
 
 // Get tickets by customer ID (Customer only)
-exports.getTicketsByCustomerID = async (req, res) => {
+exports.getTicketByCustomerId = async (req, res) => {
   try {
-    const tickets = await Ticket.find({ customerID: req.params.customerID });
+    const tickets = await Ticket.find({ customerID: req.user._id }); // Use the logged-in user's ID
     res.status(200).json(tickets);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching tickets', error });
@@ -47,7 +43,7 @@ exports.getTicketsByCustomerID = async (req, res) => {
 };
 
 // Update ticket status or add note (Agent and Admin)
-exports.updateTicket = async (req, res) => {
+exports.updateTicketStatus = async (req, res) => {
   try {
     const { status } = req.body;
 

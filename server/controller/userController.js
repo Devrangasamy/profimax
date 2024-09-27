@@ -27,6 +27,7 @@ exports.register = async (req, res) => {
     await newUser.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error registering user', error });
   }
 };
@@ -57,6 +58,7 @@ exports.login = async (req, res) => {
 
     res.status(200).json({ token, user: { id: user._id, role: user.role } });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error logging in', error });
   }
 };
@@ -67,6 +69,7 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.find().select('-password'); // Exclude password
     res.status(200).json(users);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error fetching users', error });
   }
 };
@@ -80,6 +83,7 @@ exports.getUserById = async (req, res) => {
     }
     res.status(200).json(user);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error fetching user', error });
   }
 };
@@ -100,6 +104,7 @@ exports.updateUser = async (req, res) => {
 
     res.status(200).json(updatedUser);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error updating user', error });
   }
 };
@@ -113,6 +118,7 @@ exports.deleteUser = async (req, res) => {
     }
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error deleting user', error });
   }
 };

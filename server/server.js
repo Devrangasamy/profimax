@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cors = require('cors'); // Import the cors middleware
 const { connectDB } = require('./config/db');
 const userRoutes = require('./route/userRoutes');
 const ticketRoutes = require('./route/ticketRoutes');
@@ -14,6 +15,14 @@ const app = express();
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());
+
+// CORS Middleware to allow cross-origin requests
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with your frontend's URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Enable cookies or other credentials if needed
+}));
 
 // Routes
 app.use('/api/users', userRoutes); // User routes
